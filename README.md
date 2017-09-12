@@ -1,10 +1,12 @@
-# ciweb
+Continuous Integration System Web
+=================================
 
 > A Vue.js project
 
-## Build Setup
+Build Setup
+-----------
 
-``` bash
+```bash
 # install dependencies
 npm install
 
