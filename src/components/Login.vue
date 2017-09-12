@@ -1,6 +1,6 @@
 <template>
 <div class="login">
-  <h1>{{ msg }}</h1>
+  <h2>{{ msg }}</h2>
   <div class="form">
     <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
       <FormItem prop="user">
@@ -17,13 +17,15 @@
         <Button type="primary" @click="handleSubmit('formInline')">Sign in</Button>
       </FormItem>
     </Form>
+    <p>
+      {{ time }}
+    </p>
   </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: 'login',
   data () {
     return {
       msg: 'Welcome to Continuous Integration System',
@@ -48,8 +50,27 @@ export default {
           message: 'Password is to low',
           trigger: 'blur'
         }]
-      }
+      },
+      time: null
     }
+  },
+  mounted () {
+    setInterval(() => {
+      let today = new Date()
+      let year = today.getFullYear()
+      let month = today.getMonth() + 1
+      let day = today.getDate()
+      let hours = today.getHours()
+      let minutes = today.getMinutes()
+      let seconds = today.getSeconds()
+      month = month < 10 ? '0' + month : month
+      day = day < 10 ? '0' + day : day
+      hours = hours < 10 ? '0' + hours : hours
+      minutes = minutes < 10 ? '0' + minutes : minutes
+      seconds = seconds < 10 ? '0' + seconds : seconds
+
+      this.time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    }, 1000)
   },
   methods: {
     handleSubmit (name) {
@@ -66,23 +87,13 @@ export default {
 </script>
 
 <style scoped>
-h1,
+.login {
+  text-align: center;
+  margin-top: 60px;
+}
+
 h2 {
   font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
 }
 
 .form {

@@ -64,7 +64,7 @@ export let compare = (propertyName) => {
 }
 
 /**
- * 深拷贝对象、数组
+ * DeepCopy Object、Array
  * @param  {[type]} source 原始对象或数组
  * @return {[type]}        深拷贝后的对象或数组
  */
@@ -111,7 +111,6 @@ let getsec = function (str) {
   }
 }
 
-// 写 cookies
 export let setCookie = function setCookie (name, value, time) {
   if (time) {
     let strsec = getsec(time)
@@ -123,14 +122,12 @@ export let setCookie = function setCookie (name, value, time) {
   }
 }
 
-// 读 cookies
 export let getCookie = function (name) {
   let reg = new RegExp('(^| )' + name + '=([^;]*)(;|$)')
   let arr = document.cookie.match(reg)
   return arr ? unescape(arr[2]) : null
 }
 
-// 删 cookies
 export let delCookie = function (name) {
   var exp = new Date()
   exp.setTime(exp.getTime() - 1)
@@ -140,7 +137,6 @@ export let delCookie = function (name) {
   }
 }
 
-// 获取Token
 export let getToken = function () {
   if (window.sessionStorage && window.sessionStorage.Bearer) {
     return window.sessionStorage.Bearer
@@ -151,7 +147,6 @@ export let getToken = function () {
   }
 }
 
-// 设置Token
 export let setToken = function (token, rememberTime) {
   if (window.sessionStorage) {
     window.sessionStorage.Bearer = token
@@ -170,7 +165,6 @@ export let setToken = function (token, rememberTime) {
   }
 }
 
-// 删除Token
 export let delToken = function () {
   if (window.sessionStorage && window.sessionStorage.Bearer) {
     window.sessionStorage.removeItem('Bearer')
