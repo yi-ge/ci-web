@@ -1,6 +1,6 @@
 <template>
 <div class="login">
-  <h2>{{ msg }}</h2>
+  <h2>{{ pageTitle }}</h2>
   <div class="form">
     <Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
       <FormItem prop="user">
@@ -20,6 +20,7 @@
     <p>
       {{ time }}
     </p>
+    <Spin fix v-if="spinShow"></Spin>
   </div>
 </div>
 </template>
@@ -28,7 +29,7 @@
 export default {
   data () {
     return {
-      msg: 'Welcome to Continuous Integration System',
+      pageTitle: 'Welcome to Continuous Integration System',
       formInline: {
         user: '',
         password: ''
@@ -51,11 +52,12 @@ export default {
           trigger: 'blur'
         }]
       },
-      time: null
+      time: null,
+      spinShow: false
     }
   },
   mounted () {
-    setInterval(() => {
+    let getTime = () => {
       let today = new Date()
       let year = today.getFullYear()
       let month = today.getMonth() + 1
@@ -70,15 +72,31 @@ export default {
       seconds = seconds < 10 ? '0' + seconds : seconds
 
       this.time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-    }, 1000)
+    }
+
+    getTime()
+
+    setInterval(getTime, 1000)
   },
   methods: {
     handleSubmit (name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(async (valid) => {
         if (valid) {
-          this.$Message.success('Loading...')
+          this.spinShow = true
+          try {
+            let { data } = this.$request.post('/login')
+            this.spinShow = false
+            if (data.status === 1) {
+              this.$Message.success('Loading...')
+            } else {
+              this.$Message.error(data.result.msg)
+            }
+          } catch (e) {
+            this.$Message.error('请检查网络连接')
+            this.spinShow = false
+          }
         } else {
-          this.$Message.error('Fail!')
+          this.$Message.info('Fail!')
         }
       })
     }
