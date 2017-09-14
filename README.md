@@ -1,6 +1,8 @@
 Continuous Integration System Web
 =================================
 
+The program use together with https://github.com/yi-ge/ci or http://git.oschina.net/mgenius/ci.
+
 > A Vue.js project
 
 Build Setup
