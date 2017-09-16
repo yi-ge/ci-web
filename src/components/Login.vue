@@ -272,7 +272,7 @@ export default {
             let { data } = await this.$request.post('/public/login', {username: this.formLogin.username, password: this.formLogin.password})
             this.spinShow = false
             if (data.status === 1) {
-              this.$Message.success('Loading...')
+              this.$Message.success('Success')
               setToken(data.result.data.token, this.formLogin.remember ? '7d' : null)
               this.$router.push('/')
             } else {

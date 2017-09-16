@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <keep-alive>
-      <component :is="currentView">
+      <login v-if="this.$route.name === 'Login'">
         <div slot="content"><router-view></router-view></div>
-      </component>
+      </login>
+      <layout else>
+        <div slot="content"><router-view></router-view></div>
+      </layout>
     </keep-alive>
   </div>
 </template>
@@ -17,11 +20,6 @@ export default {
   components: {
     'layout': manage,
     'login': login
-  },
-  data () {
-    return {
-      currentView: this.$route.name === 'Login' ? 'login' : 'layout'
-    }
   }
 }
 </script>
