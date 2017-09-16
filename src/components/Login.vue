@@ -9,7 +9,7 @@
         </Input>
       </FormItem>
       <FormItem prop="password">
-        <Input type="password" v-model="formLogin.password" placeholder="Password">
+        <Input type="password" v-model="formLogin.password" placeholder="Password" @keyup.enter.native="handleLoginSubmit('formLogin')">
           <Icon type="ios-locked-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -22,7 +22,7 @@
         </div>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleLoginSubmit('formInline')">Sign in</Button>
+        <Button type="primary" @click="handleLoginSubmit('formLogin')">Sign in</Button>
       </FormItem>
     </Form>
     <Form ref="formRegister" :model="formRegister" :rules="ruleRegister" v-show="registerShow">
@@ -49,20 +49,20 @@
         </Input>
       </FormItem>
       <FormItem prop="email">
-        <Input type="text" v-model="formRegister.email" placeholder="Email">
+        <Input type="text" v-model="formRegister.email" placeholder="Email" @keyup.enter.native="handleLoginSubmit('formRegister')">
           <Icon type="ios-email-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
       <FormItem>
         <div style="float: left">
-          <Checkbox v-model="formRegister.accept">I have read and accepted the "user's agreement".</Checkbox>
+          <Checkbox v-model="formRegister.accept">I have read and accepted the User Agreement.</Checkbox>
         </div>
         <div style="float: right;cursor: pointer;" @click="login">
           Sign in
         </div>
       </FormItem>
       <FormItem>
-        <Button type="primary" @click="handleRegisterSubmit('formInline')">Sign up</Button>
+        <Button type="primary" @click="handleRegisterSubmit('formRegister')">Sign up</Button>
       </FormItem>
     </Form>
     <p>
@@ -123,6 +123,7 @@ export default {
         console.log(e)
       }
     }
+
     const validateUsername = async (rule, value, callback) => {
       try {
         if (value) {
@@ -199,7 +200,7 @@ export default {
           { validator: validatePassCheck, trigger: 'blur' }
         ],
         email: [
-          { type: 'email', required: true, message: '请输入正确的邮箱', trigger: 'change' },
+          { type: 'email', required: true, message: '请输入正确的邮箱', trigger: 'blur' },
           { validator: validateEmail, trigger: 'blur' }
         ],
         phone: [
@@ -268,11 +269,12 @@ export default {
         if (valid) {
           this.spinShow = true
           try {
-            let { data } = this.$request.post('/login')
+            let { data } = await this.$request.post('/public/login', {username: this.formLogin.username, password: this.formLogin.password})
             this.spinShow = false
             if (data.status === 1) {
               this.$Message.success('Loading...')
-              setToken(data.result.data.token, this.remember ? '7d' : null)
+              setToken(data.result.data.token, this.formLogin.remember ? '7d' : null)
+              this.$router.push('/')
             } else {
               this.$Message.error(data.result.msg)
             }
@@ -282,6 +284,38 @@ export default {
           }
         } else {
           this.$Message.info('Fail!')
+        }
+      })
+    },
+    handleRegisterSubmit (name) {
+      this.$refs[name].validate(async (valid) => {
+        if (this.formRegister.accept) {
+          if (valid) {
+            this.spinShow = true
+            try {
+              let { data } = await this.$request.post('/public/register', {
+                username: this.formRegister.username,
+                password: this.formRegister.password,
+                phone: this.formRegister.phone,
+                email: this.formRegister.email
+              })
+              this.spinShow = false
+              if (data.status === 1) {
+                this.$Message.success('Loading...')
+                setToken(data.result.data.token)
+                this.$router.push('/')
+              } else {
+                this.$Message.error(data.result.msg)
+              }
+            } catch (e) {
+              this.$Message.error('Unable to connect to the network...')
+              this.spinShow = false
+            }
+          } else {
+            this.$Message.info('Fail!')
+          }
+        } else {
+          this.$Message.info('You must accept the User Agreement.')
         }
       })
     },
