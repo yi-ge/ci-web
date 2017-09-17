@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <div class="layout" :class="showMenu ? 'layout-show-text' : 'layout-hide-text'">
-      <div class="layout-menu-left" :style="showMenu ? 'width: 100px' : 'width: 69px'">
+      <div class="layout-menu-left" :style="showMenu ? 'width: ' + showWidth + 'px' : 'width: ' + hideWith + 'px'">
         <Menu active-name="1" theme="dark" width="auto">
           <slot name="header">
             <div class="layout-logo-left">CI</div>
@@ -38,7 +38,7 @@
           </MenuItem>
         </Menu>
       </div>
-      <div class="layout-right" :style="showMenu ? 'margin-left: 100px' : 'margin-left: 69px'">
+      <div class="layout-right" :style="showMenu ? 'margin-left: ' + showWidth + 'px' : 'margin-left: ' + hideWith + 'px'">
         <div class="right-content">
           <div class="layout-header">
             <Button type="text" @click="toggleClick">
@@ -86,8 +86,13 @@
 export default {
   data () {
     return {
-      showMenu: true
+      showMenu: true,
+      showWidth: 100,
+      hideWith: 69
     }
+  },
+  created () {
+
   },
   computed: {
     iconSize () {
@@ -97,6 +102,14 @@ export default {
   methods: {
     toggleClick () {
       this.showMenu = !this.showMenu
+    }
+  },
+  mounted () {
+    console.log(document.body.clientHeight)
+    if (document.body.clientHeight <= 768) {
+      this.showMenu = false
+      this.showWidth = 100
+      this.hideWith = 0
     }
   }
 }
@@ -143,7 +156,8 @@ export default {
   height: 100%;
   float: left;
   background: #464c5b;
-  transition: 1s;
+  overflow: hidden;
+  transition: width 1s;
   -moz-transition: width .3s;	/* Firefox 4 */
   -webkit-transition: width .3s;	/* Safari 和 Chrome */
   -o-transition: width .3s;	/* Opera */
@@ -228,7 +242,7 @@ export default {
   font-size: 14px;
 }
 
-@media screen and (max-width: 600px){
+@media screen and (max-width: 768px){
 
 }
 </style>
