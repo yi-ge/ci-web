@@ -4,7 +4,7 @@ import { getToken } from './tool'
 const DevBaseUrl = 'http://127.0.0.1:5000'
 const ProdBashUrl = 'https://api.wulvshi.com'
 
-let config = {
+export let config = {
   baseURL: process.env.NODE_ENV !== 'production' ? DevBaseUrl : ProdBashUrl
 }
 

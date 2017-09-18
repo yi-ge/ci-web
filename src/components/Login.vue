@@ -9,8 +9,16 @@
         </Input>
       </FormItem>
       <FormItem prop="password">
-        <Input type="password" v-model="formLogin.password" placeholder="Password" @keyup.enter.native="handleLoginSubmit('formLogin')">
+        <Input type="password" v-model="formLogin.password" placeholder="Password">
           <Icon type="ios-locked-outline" slot="prepend"></Icon>
+        </Input>
+      </FormItem>
+      <FormItem prop="verfiycode">
+        <Input type="text" v-model="formLogin.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleLoginSubmit('formLogin')">
+          <Icon type="ios-checkmark-outline" slot="prepend"></Icon>
+          <div slot="append" class="varfiy" @click="reloadVerfiyCode">
+            <img :src="verfiycodeImg" />
+          </div>
         </Input>
       </FormItem>
       <FormItem>
@@ -49,8 +57,16 @@
         </Input>
       </FormItem>
       <FormItem prop="email">
-        <Input type="text" v-model="formRegister.email" placeholder="Email" @keyup.enter.native="handleLoginSubmit('formRegister')">
+        <Input type="text" v-model="formRegister.email" placeholder="Email">
           <Icon type="ios-email-outline" slot="prepend"></Icon>
+        </Input>
+      </FormItem>
+      <FormItem prop="verfiycode">
+        <Input type="text" v-model="formRegister.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleLoginSubmit('formRegister')">
+          <Icon type="ios-checkmark-outline" slot="prepend"></Icon>
+          <div slot="append" class="varfiy" @click="reloadVerfiyCode">
+            <img :src="verfiycodeImg" />
+          </div>
         </Input>
       </FormItem>
       <FormItem>
@@ -75,6 +91,7 @@
 
 <script>
 import { setToken } from '../utils/tool'
+import { config } from '../utils/request'
 
 export default {
   data () {
@@ -107,7 +124,7 @@ export default {
           if (value.length !== 11) {
             callback(new Error('长度不符合要求，暂不支持非中国大陆手机号'))
           } else {
-            let tmp = await this.$request.post('/public/user/dereplication', {type: 'phone', phone: value})
+            let tmp = await this.$request.post('/public/user/dereplication', {type: 'phone', value: value})
             if (tmp.data.status === 2) {
               callback(new Error('手机号已存在!'))
             } else if (tmp.data.status === 1) {
@@ -130,7 +147,7 @@ export default {
           if (!(/[a-zA-Z0-9]{3,20}/.test(value))) {
             callback(new Error('用户名不符合要求，应为3-20位大小写字母或数字'))
           } else {
-            let tmp = await this.$request.post('/public/user/dereplication', {type: 'username', username: value})
+            let tmp = await this.$request.post('/public/user/dereplication', {type: 'username', value: value})
             if (tmp.data.status === 2) {
               callback(new Error('用户名已存在!'))
             } else if (tmp.data.status === 1) {
@@ -149,7 +166,7 @@ export default {
 
     const validateEmail = async (rule, value, callback) => {
       try {
-        let tmp = await this.$request.post('/public/user/dereplication', {type: 'email', email: value})
+        let tmp = await this.$request.post('/public/user/dereplication', {type: 'email', value: value})
         if (tmp.data.status === 2) {
           callback(new Error('邮箱已存在!'))
         } else if (tmp.data.status === 1) {
@@ -167,7 +184,8 @@ export default {
       formLogin: {
         username: '',
         password: '',
-        remember: false
+        remember: false,
+        verfiycode: ''
       },
       formRegister: {
         username: '',
@@ -175,7 +193,8 @@ export default {
         repassword: '',
         phone: '',
         email: '',
-        accept: false
+        accept: false,
+        verfiycode: ''
       },
       ruleLogin: {
         username: [{
@@ -186,6 +205,11 @@ export default {
         password: [{
           required: true,
           message: 'Please input password',
+          trigger: 'blur'
+        }],
+        verfiycode: [{
+          required: true,
+          message: 'Please input Identifying Code',
           trigger: 'blur'
         }]
       },
@@ -205,7 +229,12 @@ export default {
         ],
         phone: [
           { required: true, validator: validatePhone, trigger: 'blur' }
-        ]
+        ],
+        verfiycode: [{
+          required: true,
+          message: 'Please input Identifying Code',
+          trigger: 'blur'
+        }]
       },
       time: null,
       spinShow: false,
@@ -213,8 +242,13 @@ export default {
       progress: {
         percentage: 0,
         status: 'normal'
-      }
+      },
+      verfiycodeImg: null,
+      code: null
     }
+  },
+  created () {
+    this.reloadVerfiyCode()
   },
   mounted () {
     window.tmpThis = this
@@ -269,7 +303,12 @@ export default {
         if (valid) {
           this.spinShow = true
           try {
-            let { data } = await this.$request.post('/public/login', {username: this.formLogin.username, password: this.formLogin.password})
+            let { data } = await this.$request.post('/public/login', {
+              username: this.formLogin.username,
+              password: this.formLogin.password,
+              code: this.code,
+              verfiycode: this.formLogin.verfiycode
+            })
             this.spinShow = false
             if (data.status === 1) {
               this.$Message.success('Success')
@@ -286,6 +325,7 @@ export default {
           this.$Message.info('Fail!')
         }
       })
+      this.reloadVerfiyCode()
     },
     handleRegisterSubmit (name) {
       this.$refs[name].validate(async (valid) => {
@@ -297,7 +337,9 @@ export default {
                 username: this.formRegister.username,
                 password: this.formRegister.password,
                 phone: this.formRegister.phone,
-                email: this.formRegister.email
+                email: this.formRegister.email,
+                code: this.code,
+                verfiycode: this.formRegister.verfiycode
               })
               this.spinShow = false
               if (data.status === 1) {
@@ -318,12 +360,18 @@ export default {
           this.$Message.info('You must accept the User Agreement.')
         }
       })
+      this.reloadVerfiyCode()
     },
     register () {
       this.registerShow = true
     },
     login () {
       this.registerShow = false
+    },
+    reloadVerfiyCode () {
+      let tmp = new Date().getTime().toString()
+      this.code = (tmp.substring(5, tmp.length) + Math.floor(Math.random() * 1000).toString()).toString()
+      this.verfiycodeImg = config.baseURL + '/public/verfiycode?code=' + this.code
     }
   }
 }
@@ -355,10 +403,21 @@ h2 {
   width: 100%;
   margin: auto;
 }
+
+.varfiy {
+  margin: -7px;
+  overflow: hidden;
+  height: 36px;
+  cursor: pointer;
+}
 </style>
 
 <style>
 .password .ivu-form-item-error-tip {
   text-align: left;
+}
+
+.ivu-input-group-append {
+  overflow: hidden;
 }
 </style>

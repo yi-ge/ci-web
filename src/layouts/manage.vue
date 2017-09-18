@@ -2,38 +2,38 @@
 <div class="container">
   <div class="layout" :class="showMenu ? 'layout-show-text' : 'layout-hide-text'">
       <div class="layout-menu-left" :style="showMenu ? 'width: ' + showWidth + 'px' : 'width: ' + hideWith + 'px'">
-        <Menu active-name="1" theme="dark" width="auto">
+        <Menu :active-name="this.$route.name" theme="dark" width="auto" @on-select="clickMenu">
           <slot name="header">
             <div class="layout-logo-left">CI</div>
           </slot>
-          <MenuItem name="1">
+          <MenuItem name="Home">
             <div class="menu-item-content">
               <Icon type="home" :size="iconSize"></Icon>
-              <span class="layout-text">首页</span>
+              <span class="layout-text">Home</span>
             </div>
           </MenuItem>
-          <MenuItem name="2">
+          <MenuItem name="Timing">
             <div class="menu-item-content">
               <Icon type="ios-timer" :size="iconSize"></Icon>
-              <span class="layout-text">定时</span>
+              <span class="layout-text">Timing</span>
             </div>
           </MenuItem>
-          <MenuItem name="3">
+          <MenuItem name="Plugin">
             <div class="menu-item-content">
               <Icon type="cube" :size="iconSize"></Icon>
-              <span class="layout-text">插件</span>
+              <span class="layout-text">Plugin</span>
             </div>
           </MenuItem>
-          <MenuItem name="4">
+          <MenuItem name="Users">
             <div class="menu-item-content">
               <Icon type="person-stalker" :size="iconSize"></Icon>
-              <span class="layout-text">用户</span>
+              <span class="layout-text">Users</span>
             </div>
           </MenuItem>
-          <MenuItem name="5">
+          <MenuItem name="Setting">
             <div class="menu-item-content">
               <Icon type="gear-b" :size="iconSize"></Icon>
-              <span class="layout-text">设置</span>
+              <span class="layout-text">Setting</span>
             </div>
           </MenuItem>
         </Menu>
@@ -46,7 +46,7 @@
             </Button>
             <div class="right-menu">
               <div class="right-menu-item">
-                <Avatar icon="person" size="large" />
+                <Avatar icon="person" />
               </div>
               <div class="right-menu-item user-info">
                 张三
@@ -58,9 +58,7 @@
           </div>
           <div class="layout-breadcrumb">
             <Breadcrumb>
-              <BreadcrumbItem href="#">首页</BreadcrumbItem>
-              <BreadcrumbItem href="#">应用中心</BreadcrumbItem>
-              <BreadcrumbItem>某应用</BreadcrumbItem>
+              <BreadcrumbItem :href="this.$route.path">{{ this.$route.name }}</BreadcrumbItem>
             </Breadcrumb>
           </div>
           <div class="layout-content">
@@ -87,12 +85,15 @@ export default {
   data () {
     return {
       showMenu: true,
-      showWidth: 100,
+      showWidth: 109,
       hideWith: 69
     }
   },
   created () {
-
+    if (document.body.clientHeight <= 768) {
+      this.showMenu = false
+      this.hideWith = 0
+    }
   },
   computed: {
     iconSize () {
@@ -102,14 +103,9 @@ export default {
   methods: {
     toggleClick () {
       this.showMenu = !this.showMenu
-    }
-  },
-  mounted () {
-    console.log(document.body.clientHeight)
-    if (document.body.clientHeight <= 768) {
-      this.showMenu = false
-      this.showWidth = 100
-      this.hideWith = 0
+    },
+    clickMenu (name) {
+      this.$router.push({name: name})
     }
   }
 }
@@ -143,6 +139,7 @@ export default {
   background: #fff;
   border-radius: 4px;
   height: 100%;
+  overflow: auto;
 }
 
 .layout-copy {
@@ -222,9 +219,9 @@ export default {
 
 .right-menu-item {
   float: left;
-  line-height: 40px;
+  line-height: 32px;
   height: 60px;
-  padding: 10px;
+  padding: 14px;
   cursor: pointer;
 }
 
