@@ -12,6 +12,12 @@
               <span class="layout-text">Home</span>
             </div>
           </MenuItem>
+          <MenuItem name="Server">
+            <div class="menu-item-content">
+              <Icon type="ios-monitor" :size="iconSize"></Icon>
+              <span class="layout-text">Server</span>
+            </div>
+          </MenuItem>
           <MenuItem name="Timing">
             <div class="menu-item-content">
               <Icon type="ios-timer" :size="iconSize"></Icon>
@@ -86,7 +92,7 @@ export default {
     return {
       showMenu: true,
       showWidth: 109,
-      hideWith: 69
+      hideWith: 72
     }
   },
   created () {
@@ -94,6 +100,9 @@ export default {
       this.showMenu = false
       this.hideWith = 0
     }
+  },
+  mounted () {
+
   },
   computed: {
     iconSize () {

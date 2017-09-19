@@ -15,7 +15,6 @@
       </FormItem>
       <FormItem prop="verfiycode">
         <Input type="text" v-model="formLogin.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleLoginSubmit('formLogin')">
-          <Icon type="ios-checkmark-outline" slot="prepend"></Icon>
           <div slot="append" class="varfiy" @click="reloadVerfiyCode">
             <img :src="verfiycodeImg" />
           </div>
@@ -63,7 +62,6 @@
       </FormItem>
       <FormItem prop="verfiycode">
         <Input type="text" v-model="formRegister.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleLoginSubmit('formRegister')">
-          <Icon type="ios-checkmark-outline" slot="prepend"></Icon>
           <div slot="append" class="varfiy" @click="reloadVerfiyCode">
             <img :src="verfiycodeImg" />
           </div>
@@ -153,7 +151,7 @@ export default {
             } else if (tmp.data.status === 1) {
               callback()
             } else {
-              callback(new Error('未知错误! ' + tmp.data.status))
+              callback(new Error('未知错误 ' + tmp.data.status))
             }
           }
         } else {
@@ -303,7 +301,7 @@ export default {
         if (valid) {
           this.spinShow = true
           try {
-            let { data } = await this.$request.post('/public/login', {
+            let { data } = await this.$request.post('/public/auth/login', {
               username: this.formLogin.username,
               password: this.formLogin.password,
               code: this.code,
@@ -333,7 +331,7 @@ export default {
           if (valid) {
             this.spinShow = true
             try {
-              let { data } = await this.$request.post('/public/register', {
+              let { data } = await this.$request.post('/public/auth/register', {
                 username: this.formRegister.username,
                 password: this.formRegister.password,
                 phone: this.formRegister.phone,
@@ -371,7 +369,7 @@ export default {
     reloadVerfiyCode () {
       let tmp = new Date().getTime().toString()
       this.code = (tmp.substring(5, tmp.length) + Math.floor(Math.random() * 1000).toString()).toString()
-      this.verfiycodeImg = config.baseURL + '/public/verfiycode?code=' + this.code
+      this.verfiycodeImg = config.baseURL + '/public/auth/verfiycode?code=' + this.code
     }
   }
 }

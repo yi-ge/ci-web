@@ -1,5 +1,5 @@
 <template>
-<div class="home">
+<div class="server">
   <div class="right-region">
     <Button type="primary" size="small" icon="android-add" @click="modal = true">Server</Button>
   </div>

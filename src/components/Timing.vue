@@ -1,7 +1,5 @@
 <template>
-  <div class="timing">
-    Timing
-  </div>
+<div class="timing"> Timing </div>
 </template>
 
 <script>
