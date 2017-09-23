@@ -119,20 +119,20 @@ export default {
     const validatePhone = async (rule, value, callback) => {
       try {
         if (value) {
-          if (value.length !== 11) {
-            callback(new Error('长度不符合要求，暂不支持非中国大陆手机号'))
+          if (value.length < 5) {
+            callback(new Error('The phone seems to be wrong.'))
           } else {
             let tmp = await this.$request.post('/public/user/dereplication', {type: 'phone', value: value})
             if (tmp.data.status === 2) {
-              callback(new Error('手机号已存在!'))
+              callback(new Error('Phone already exists, please try another.'))
             } else if (tmp.data.status === 1) {
               callback()
             } else {
-              callback(new Error('未知错误! ' + tmp.data.status))
+              callback(new Error('Unknown error:' + tmp.data.status))
             }
           }
         } else {
-          callback(new Error('请输入手机号'))
+          callback(new Error('Phone can not empty.'))
         }
       } catch (e) {
         console.log(e)
@@ -143,19 +143,19 @@ export default {
       try {
         if (value) {
           if (!(/[a-zA-Z0-9]{3,20}/.test(value))) {
-            callback(new Error('用户名不符合要求，应为3-20位大小写字母或数字'))
+            callback(new Error('The phone seems to be wrong, 3-20 upper case and lower case and numbers.'))
           } else {
             let tmp = await this.$request.post('/public/user/dereplication', {type: 'username', value: value})
             if (tmp.data.status === 2) {
-              callback(new Error('用户名已存在!'))
+              callback(new Error('Username already exists, please try another.'))
             } else if (tmp.data.status === 1) {
               callback()
             } else {
-              callback(new Error('未知错误 ' + tmp.data.status))
+              callback(new Error('Unknown error:' + tmp.data.status))
             }
           }
         } else {
-          callback(new Error('请输入用户名'))
+          callback(new Error('Username can not empty.'))
         }
       } catch (e) {
         console.log(e)
@@ -166,11 +166,11 @@ export default {
       try {
         let tmp = await this.$request.post('/public/user/dereplication', {type: 'email', value: value})
         if (tmp.data.status === 2) {
-          callback(new Error('邮箱已存在!'))
+          callback(new Error('Email already exists, please try another.'))
         } else if (tmp.data.status === 1) {
           callback()
         } else {
-          callback(new Error('未知错误!'))
+          callback(new Error('Unknown error:' + tmp.data.status))
         }
       } catch (e) {
         console.log(e)
@@ -197,17 +197,17 @@ export default {
       ruleLogin: {
         username: [{
           required: true,
-          message: 'Please input username or email, phone',
+          message: 'Please input username or email, phone.',
           trigger: 'blur'
         }],
         password: [{
           required: true,
-          message: 'Please input password',
+          message: 'Please input password.',
           trigger: 'blur'
         }],
         verfiycode: [{
           required: true,
-          message: 'Please input Identifying Code',
+          message: 'Please input Identifying Code.',
           trigger: 'blur'
         }]
       },
@@ -222,7 +222,7 @@ export default {
           { validator: validatePassCheck, trigger: 'blur' }
         ],
         email: [
-          { type: 'email', required: true, message: '请输入正确的邮箱', trigger: 'blur' },
+          { type: 'email', required: true, message: 'The email address seems to be wrong.', trigger: 'blur' },
           { validator: validateEmail, trigger: 'blur' }
         ],
         phone: [
@@ -230,7 +230,7 @@ export default {
         ],
         verfiycode: [{
           required: true,
-          message: 'Please input Identifying Code',
+          message: 'Please input Identifying Code.',
           trigger: 'blur'
         }]
       },
@@ -309,14 +309,14 @@ export default {
             })
             this.spinShow = false
             if (data.status === 1) {
-              this.$Message.success('Success')
+              this.$Message.success('Success!')
               setToken(data.result.data.token, this.formLogin.remember ? '7d' : null)
               this.$router.push('/')
             } else {
               this.$Message.error(data.result.msg)
             }
           } catch (e) {
-            this.$Message.error('Unable to connect to the network...')
+            this.$Message.error('Unable to connect to the network.')
             this.spinShow = false
           }
         } else {
@@ -348,7 +348,7 @@ export default {
                 this.$Message.error(data.result.msg)
               }
             } catch (e) {
-              this.$Message.error('Unable to connect to the network...')
+              this.$Message.error('Unable to connect to the network.')
               this.spinShow = false
             }
           } else {
