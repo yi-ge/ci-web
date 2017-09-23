@@ -57,7 +57,7 @@
               <div class="right-menu-item user-info">
                 张三
               </div>
-              <div class="right-menu-item log-out">
+              <div class="right-menu-item log-out" @click="logout">
                 <Icon type="log-out" size="20"></Icon>
               </div>
             </div>
@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import { delToken } from '../utils/tool'
+
 export default {
   data () {
     return {
@@ -115,6 +117,11 @@ export default {
     },
     clickMenu (name) {
       this.$router.push({name: name})
+    },
+    logout () {
+      this.$request.get('/auth/logout')
+      delToken()
+      this.$router.replace('/Login')
     }
   }
 }
