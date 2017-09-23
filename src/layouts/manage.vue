@@ -14,7 +14,7 @@
           </MenuItem>
           <MenuItem name="Server">
             <div class="menu-item-content">
-              <Icon type="ios-monitor" :size="iconSize"></Icon>
+              <Icon type="android-cloud" :size="iconSize"></Icon>
               <span class="layout-text">Server</span>
             </div>
           </MenuItem>

@@ -377,8 +377,9 @@ export default {
 
 <style scoped>
 .login {
+  height: 100%;
   text-align: center;
-  margin-top: 60px;
+  padding-top: 60px;
 }
 
 h2 {
