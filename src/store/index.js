@@ -3,13 +3,18 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const InitVuex = async store => {
+
+}
+
 export default new Vuex.Store({
   state: {
-    count: 0
+    userinfo: null
   },
   mutations: {
-    increment (state) {
-      state.count++
+    setUserinfo (state, payload) {
+      state.userinfo = payload
     }
-  }
+  },
+  plugins: [InitVuex]
 })

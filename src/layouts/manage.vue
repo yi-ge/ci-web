@@ -55,7 +55,7 @@
                 <Avatar icon="person" />
               </div>
               <div class="right-menu-item user-info">
-                张三
+                {{ this.$store.state.userinfo ? this.$store.state.userinfo.username : '' }}
               </div>
               <div class="right-menu-item log-out" @click="logout">
                 <Icon type="log-out" size="20"></Icon>
@@ -103,8 +103,21 @@ export default {
       this.hideWith = 0
     }
   },
-  mounted () {
-
+  async mounted () {
+    try {
+      let userinfo = await this.$request.post('/user/info')
+      if (userinfo.data.status === 1) {
+        userinfo = userinfo.data.result.data.userinfo
+        this.$store.commit('setUserinfo', userinfo)
+      } else if (userinfo.data.status >= 50000) {
+        this.$router.replace('/Login')
+      } else {
+        this.$Message.error('Unable to get user infomations.')
+      }
+    } catch (e) {
+      console.log(e)
+      this.$router.replace('/Login')
+    }
   },
   computed: {
     iconSize () {
