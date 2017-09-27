@@ -249,6 +249,14 @@ export default {
     this.reloadVerfiyCode()
   },
   mounted () {
+    this.$request.get('/public/auth/loginCheck').then(r => {
+      if (r.data.status !== 1) {
+        this.$Message.error(r.data.result.msg)
+      }
+    }).catch(e => {
+      this.$Message.error('服务器连接异常')
+    })
+
     window.tmpThis = this
 
     this.$watch('formRegister.password', function (newVal, oldVal) {
