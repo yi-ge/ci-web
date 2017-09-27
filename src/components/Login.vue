@@ -61,7 +61,7 @@
         </Input>
       </FormItem>
       <FormItem prop="verfiycode">
-        <Input type="text" v-model="formRegister.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleLoginSubmit('formRegister')">
+        <Input type="text" v-model="formRegister.verfiycode" placeholder="Identifying Code" size="large" @keyup.enter.native="handleRegisterSubmit('formRegister')">
           <div slot="append" class="varfiy" @click="reloadVerfiyCode">
             <img :src="verfiycodeImg" />
           </div>
