@@ -327,11 +327,11 @@ export default {
             this.$Message.error('Unable to connect to the network.')
             this.spinShow = false
           }
+          this.reloadVerfiyCode()
         } else {
           this.$Message.info('Fail!')
         }
       })
-      this.reloadVerfiyCode()
     },
     handleRegisterSubmit (name) {
       this.$refs[name].validate(async (valid) => {
@@ -359,6 +359,7 @@ export default {
               this.$Message.error('Unable to connect to the network.')
               this.spinShow = false
             }
+            this.reloadVerfiyCode()
           } else {
             this.$Message.info('Fail!')
           }
@@ -366,7 +367,6 @@ export default {
           this.$Message.info('You must accept the User Agreement.')
         }
       })
-      this.reloadVerfiyCode()
     },
     register () {
       this.registerShow = true
