@@ -98,7 +98,7 @@ export default {
     }
   },
   created () {
-    if (document.body.clientHeight <= 768) {
+    if (document.body.clientWidth <= 768) {
       this.showMenu = false
       this.hideWith = 0
     }
