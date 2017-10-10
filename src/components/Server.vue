@@ -5,51 +5,30 @@
   </div>
   <Table stripe :columns="columns" :data="data"></Table>
   <Modal v-model="modal" title="Add Server" @on-ok="modalCommit('formValidate')" @on-cancel="modalCancel('formValidate')">
-    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-      <FormItem label="姓名" prop="name">
-        <Input v-model="formValidate.name" placeholder="请输入姓名"></Input>
+    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
+      <FormItem label="Server Name" prop="name">
+        <Input v-model="formValidate.name" placeholder="Custom"></Input>
       </FormItem>
-      <FormItem label="邮箱" prop="mail">
-        <Input v-model="formValidate.mail" placeholder="请输入邮箱"></Input>
+      <FormItem label="Server IPv4" prop="ip">
+        <Input v-model="formValidate.ip"></Input>
       </FormItem>
-      <FormItem label="城市" prop="city">
-        <Select v-model="formValidate.city" placeholder="请选择所在地">
-                <Option value="beijing">北京市</Option>
-                <Option value="shanghai">上海市</Option>
-                <Option value="shenzhen">深圳市</Option>
-            </Select>
-      </FormItem>
-      <FormItem label="选择日期">
-        <Row>
-          <Col span="11">
-          <FormItem prop="date">
-            <DatePicker type="date" placeholder="选择日期" v-model="formValidate.date"></DatePicker>
-          </FormItem>
-          </Col>
-          <Col span="2" style="text-align: center">-</Col>
-          <Col span="11">
-          <FormItem prop="time">
-            <TimePicker type="time" placeholder="选择时间" v-model="formValidate.time"></TimePicker>
-          </FormItem>
-          </Col>
-        </Row>
-      </FormItem>
-      <FormItem label="性别" prop="gender">
-        <RadioGroup v-model="formValidate.gender">
-          <Radio label="male">男</Radio>
-          <Radio label="female">女</Radio>
+      <FormItem label="Authorization" prop="auth">
+        <RadioGroup v-model="formValidate.auth">
+          <Radio label="key" value="key">SSH KEY</Radio>
+          <Radio label="password" value="password">Password</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem label="爱好" prop="interest">
-        <CheckboxGroup v-model="formValidate.interest">
-          <Checkbox label="吃饭"></Checkbox>
-          <Checkbox label="睡觉"></Checkbox>
-          <Checkbox label="跑步"></Checkbox>
-          <Checkbox label="看电影"></Checkbox>
-        </CheckboxGroup>
+      <FormItem label="SSH KEY" prop="sshkey" v-show="formValidate.auth === 'key'">
+        <Input v-model="formValidate.sshkey" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
       </FormItem>
-      <FormItem label="备注" prop="desc">
-        <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+      <FormItem label="Password" prop="password" v-show="formValidate.auth === 'password'">
+        <Input v-model="formValidate.password" type="password"></Input>
+      </FormItem>
+      <FormItem label="Physical Address" prop="city">
+        <Input v-model="formValidate.address" placeholder="Optional"></Input>
+      </FormItem>
+      <FormItem label="Note" prop="note">
+        <Input v-model="formValidate.note" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Optional"></Input>
       </FormItem>
     </Form>
   </Modal>
@@ -112,57 +91,29 @@ export default {
       modal: false,
       formValidate: {
         name: '',
-        mail: '',
-        city: '',
-        gender: '',
-        interest: [],
-        date: '',
-        time: '',
-        desc: ''
+        ip: '',
+        auth: 'key',
+        address: '',
+        note: ''
       },
       ruleValidate: {
         name: [{
           required: true,
-          message: '姓名不能为空',
+          message: 'Not null',
           trigger: 'blur'
         }],
-        mail: [
+        ip: [
           {
             required: true,
-            message: '邮箱不能为空',
-            trigger: 'blur'
-          },
-          {
-            type: 'email',
-            message: '邮箱格式不正确',
+            message: 'Not null',
             trigger: 'blur'
           }
         ],
-        city: [{
+        auth: [{
           required: true,
-          message: '请选择城市',
+          message: 'Please select',
           trigger: 'change'
         }],
-        gender: [{
-          required: true,
-          message: '请选择性别',
-          trigger: 'change'
-        }],
-        interest: [
-          {
-            required: true,
-            type: 'array',
-            min: 1,
-            message: '至少选择一个爱好',
-            trigger: 'change'
-          },
-          {
-            type: 'array',
-            max: 2,
-            message: '最多选择两个爱好',
-            trigger: 'change'
-          }
-        ],
         date: [{
           required: true,
           type: 'date',
@@ -174,20 +125,7 @@ export default {
           type: 'date',
           message: '请选择时间',
           trigger: 'change'
-        }],
-        desc: [
-          {
-            required: true,
-            message: '请输入个人介绍',
-            trigger: 'blur'
-          },
-          {
-            type: 'string',
-            min: 20,
-            message: '介绍不能少于20字',
-            trigger: 'blur'
-          }
-        ]
+        }]
       }
     }
   },
