@@ -97,7 +97,7 @@ export default {
       if (value === '') {
         callback(new Error('Please input password'))
       } else {
-        if (!(/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(value))) {
+        if (!(/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(value))) { // eslint-disable-line
           callback(new Error('The password you entered does not meet the minimum password strength requirements，Strong passwords are at 8-18 characters long, and they contain letters in mixed case (upper-case, lower-case), numbers, and even symbols for additional security.'))
         }
         if (window.tmpThis.formRegister.repassword !== '') {
@@ -267,15 +267,15 @@ export default {
         this.progress.percentage = newVal.length * 2
         this.progress.status = 'wrong'
       } else {
-        if (/[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) {
+        if (/[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) { // eslint-disable-line
           this.progress.percentage = 25
           this.progress.status = 'wrong'
         }
-        if (/(?=.*[A-Z])(?=.*[a-z])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal) || /(?=.*[A-Z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal) || /(?=.*[0-9])(?=.*[a-z])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) {
+        if (/(?=.*[A-Z])(?=.*[a-z])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal) || /(?=.*[A-Z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal) || /(?=.*[0-9])(?=.*[a-z])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) { // eslint-disable-line
           this.progress.percentage = 50
           this.progress.status = 'active'
         }
-        if (/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) {
+        if (/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[0-9A-Za-z\x00-\x2F\x3A-\x40\x5B-\xFF]{8,18}/.test(newVal)) { // eslint-disable-line
           this.progress.percentage = 100
           this.progress.status = 'success'
         }
