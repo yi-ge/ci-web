@@ -106,6 +106,7 @@ export default {
         callback()
       }
     }
+
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please input password again'))

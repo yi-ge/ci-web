@@ -24,7 +24,7 @@
       <FormItem label="Password" prop="password" v-show="formValidate.auth === 'password'">
         <Input v-model="formValidate.password" type="password"></Input>
       </FormItem>
-      <FormItem label="Physical Address" prop="city">
+      <FormItem label="Physical Address" prop="address">
         <Input v-model="formValidate.address" placeholder="Optional"></Input>
       </FormItem>
       <FormItem label="Note" prop="note">
@@ -38,6 +38,26 @@
 <script>
 export default {
   data () {
+    const sshkeyCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input password again'))
+      } else if (value !== window.tmpThis.formRegister.password) {
+        callback(new Error('Two input password must be consistent'))
+      } else {
+        callback()
+      }
+    }
+
+    const passwordCheck = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input password again'))
+      } else if (value !== window.tmpThis.formRegister.password) {
+        callback(new Error('Two input password must be consistent'))
+      } else {
+        callback()
+      }
+    }
+
     return {
       columns: [
         {
@@ -93,6 +113,8 @@ export default {
         name: '',
         ip: '',
         auth: 'key',
+        sshkey: '',
+        password: '',
         address: '',
         note: ''
       },
@@ -114,18 +136,12 @@ export default {
           message: 'Please select',
           trigger: 'change'
         }],
-        date: [{
-          required: true,
-          type: 'date',
-          message: '请选择日期',
-          trigger: 'change'
-        }],
-        time: [{
-          required: true,
-          type: 'date',
-          message: '请选择时间',
-          trigger: 'change'
-        }]
+        sshkey: [
+          { validator: sshkeyCheck, trigger: 'blur' }
+        ],
+        password: [
+          { validator: passwordCheck, trigger: 'blur' }
+        ]
       }
     }
   },
