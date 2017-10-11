@@ -39,20 +39,16 @@
 export default {
   data () {
     const sshkeyCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input password again'))
-      } else if (value !== window.tmpThis.formRegister.password) {
-        callback(new Error('Two input password must be consistent'))
+      if (window.tmpThis.formValidate.auth === 'key' && !value) {
+        callback(new Error('Not null'))
       } else {
         callback()
       }
     }
 
     const passwordCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input password again'))
-      } else if (value !== window.tmpThis.formRegister.password) {
-        callback(new Error('Two input password must be consistent'))
+      if (window.tmpThis.formValidate.auth === 'password' && !value) {
+        callback(new Error('Not null'))
       } else {
         callback()
       }
@@ -155,11 +151,19 @@ export default {
     //   this.$Message.warning(data.result.msg)
     // }
   },
+  mounted () {
+    window.tmpThis = this
+  },
   methods: {
     modalCommit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('ok')
+          let { data } = this.$request.post('/server/add', this.formValidate)
+          if (data.status === 1) {
+            this.$Message.success('Ok')
+          } else {
+            this.$Message.warning(data.result.msg)
+          }
         } else {
           this.$Message.error('Fail')
         }
