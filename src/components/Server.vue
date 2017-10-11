@@ -3,7 +3,7 @@
   <div class="right-region">
     <Button type="primary" size="small" icon="android-add" @click="modal = true">Server</Button>
   </div>
-  <Table stripe :columns="columns" :data="data"></Table>
+  <Table stripe :columns="columns" :data="servrList"></Table>
   <Modal v-model="modal" title="Add Server" @on-ok="modalCommit('formValidate')" @on-cancel="modalCancel('formValidate')">
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
       <FormItem label="Server Name" prop="name">
@@ -29,6 +29,14 @@
       </FormItem>
       <FormItem label="Note" prop="note">
         <Input v-model="formValidate.note" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Optional"></Input>
+      </FormItem>
+      <FormItem label="Status" prop="status">
+        <AutoComplete
+          v-model="formValidate.status"
+          :data="statusData"
+          :filter-method="filterMethod"
+          placeholder="Input Or Select">
+        </AutoComplete>
       </FormItem>
     </Form>
   </Modal>
@@ -72,38 +80,41 @@ export default {
           title: 'Method',
           key: 'action',
           align: 'center',
+          width: 138,
           render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.show(params.index)
+            return h('div',
+              [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params.index)
+                    }
                   }
-                }
-              }, 'View'),
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.index)
+                }, 'View'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.index)
+                    }
                   }
-                }
-              }, 'Delete')
-            ])
+                }, 'Delete')
+              ]
+            )
           }
         }
       ],
-      data: [],
+      servrList: [],
       modal: false,
       formValidate: {
         name: '',
@@ -112,8 +123,10 @@ export default {
         sshkey: '',
         password: '',
         address: '',
-        note: ''
+        note: '',
+        status: ''
       },
+      statusData: ['正常', '异常', '糟糕'],
       ruleValidate: {
         name: [{
           required: true,
@@ -142,10 +155,9 @@ export default {
     }
   },
   async created () {
-    let { data } = this.$request.get('/server/list')
+    let { data } = await this.$request.get('/server/list')
     if (data.status === 1) {
-      console.log(data)
-      this.servrList = data.result.lists
+      this.servrList = data.result.data
     } else if (data.status === 403) {
       this.$router.push({name: 'Login'})
     } else {
@@ -172,6 +184,9 @@ export default {
     },
     modalCancel (name) {
       this.$refs[name].resetFields()
+    },
+    filterMethod (value, option) {
+      return option.toUpperCase().indexOf(value.toUpperCase()) !== -1
     }
   }
 }
