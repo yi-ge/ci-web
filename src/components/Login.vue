@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { setToken } from '../utils/tool'
+import { setToken, delToken } from '../utils/tool'
 import { config } from '../utils/request'
 
 export default {
@@ -320,7 +320,7 @@ export default {
             if (data.status === 1) {
               this.$Message.success('Success!')
               setToken(data.result.data.token, this.formLogin.remember ? '7d' : null)
-              this.$router.push('/')
+              window.location.href = '/'
             } else {
               this.$Message.error(data.result.msg)
             }
@@ -351,8 +351,9 @@ export default {
               this.spinShow = false
               if (data.status === 1) {
                 this.$Message.success('Loading...')
+                delToken()
                 setToken(data.result.data.token)
-                this.$router.push('/')
+                window.location.href = '/'
               } else {
                 this.$Message.error(data.result.msg)
               }

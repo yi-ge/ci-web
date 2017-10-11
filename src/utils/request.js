@@ -13,8 +13,6 @@ if (token) {
   config.headers = {Authorization: 'Bearer ' + token}
 }
 
-let request = axios.create(config)
-
 axios.interceptors.request.use(
   (config) => {
     if (window) {
@@ -30,4 +28,4 @@ axios.interceptors.request.use(
   }
 )
 
-export default request
+export default axios.create(config)
