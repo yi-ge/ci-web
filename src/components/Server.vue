@@ -142,24 +142,25 @@ export default {
     }
   },
   async created () {
-    // let { data } = this.$request.get('/serve/get')
-    // if (data.status === 1) {
-    //   this.servrList = data.result.lists
-    // } else if (data.status === 403) {
-    //   this.$router.push({name: 'Login'})
-    // } else {
-    //   this.$Message.warning(data.result.msg)
-    // }
+    let { data } = this.$request.get('/server/list')
+    if (data.status === 1) {
+      console.log(data)
+      this.servrList = data.result.lists
+    } else if (data.status === 403) {
+      this.$router.push({name: 'Login'})
+    } else {
+      this.$Message.warning(data.result.msg)
+    }
   },
   mounted () {
     window.tmpThis = this
   },
   methods: {
     modalCommit (name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(async (valid) => {
         if (valid) {
-          let { data } = this.$request.post('/server/add', this.formValidate)
-          if (data.status === 1) {
+          let { data } = await this.$request.post('/server/add', this.formValidate)
+          if (data && data.status === 1) {
             this.$Message.success('Ok')
           } else {
             this.$Message.warning(data.result.msg)
