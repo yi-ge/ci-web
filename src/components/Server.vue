@@ -105,7 +105,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index)
+                      this.deleteServer(params.index, params.row.id)
                     }
                   }
                 }, 'Delete')
@@ -187,6 +187,15 @@ export default {
     },
     filterMethod (value, option) {
       return option.toUpperCase().indexOf(value.toUpperCase()) !== -1
+    },
+    async deleteServer (index, id) {
+      let { data } = await this.$request.post('/server/del', {id: id})
+      if (data && data.status === 1) {
+        this.servrList.splice(index, 1)
+        this.$Message.success('Ok')
+      } else {
+        this.$Message.warning(data.result.msg)
+      }
     }
   }
 }
