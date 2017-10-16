@@ -173,6 +173,7 @@ export default {
         if (valid) {
           let { data } = await this.$request.post('/server/add', this.formValidate)
           if (data && data.status === 1) {
+            this.servrList.push(this.formValidate)
             this.$Message.success('Ok')
           } else {
             this.$Message.warning(data.result.msg)
