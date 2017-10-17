@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getToken } from './tool'
 
-const DevBaseUrl = 'http://127.0.0.1:5000'
+const DevBaseUrl = 'http://127.0.0.1:5001'
 const ProdBashUrl = 'https://api.wulvshi.com'
 
 export let config = {
