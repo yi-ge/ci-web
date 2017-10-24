@@ -77,6 +77,14 @@ export default {
           key: 'status'
         },
         {
+          title: 'Ping',
+          key: 'ping'
+        },
+        {
+          title: 'AutoStatus',
+          key: 'autostatus'
+        },
+        {
           title: 'Method',
           key: 'action',
           align: 'center',
