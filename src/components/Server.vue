@@ -115,6 +115,7 @@ export default {
         }
       ],
       servrList: [],
+      statusList: [],
       modal: false,
       formValidate: {
         name: '',
@@ -126,7 +127,7 @@ export default {
         note: '',
         status: ''
       },
-      statusData: ['正常', '异常', '糟糕'],
+      statusData: [],
       ruleValidate: {
         name: [{
           required: true,
@@ -157,7 +158,12 @@ export default {
   async created () {
     let { data } = await this.$request.get('/server/list')
     if (data.status === 1) {
-      this.servrList = data.result.data
+      this.servrList = data.result.data.lists
+      this.statusList = data.result.data.status
+      this.statusData = []
+      for (let n in this.statusList) {
+        this.statusData.push(this.statusList[n][0])
+      }
     } else if (data.status === 403) {
       this.$router.push({name: 'Login'})
     } else {
